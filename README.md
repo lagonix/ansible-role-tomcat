@@ -95,6 +95,18 @@ The simplest form:
     - role: robertdebock.haveged
     - role: robertdebock.tomcat
 ```
+To auto select a local download mirror 
+```
+- hosts: servers
+
+  roles:
+    - role: robertdebock.bootstrap
+    - role: robertdebock.epel
+    - role: robertdebock.java
+    - role: robertdebock.haveged
+    - role: robertdebock.tomcat
+      tomcat_mirror_use: true
+```
 
 And here is a heavily customized installation:
 ```
