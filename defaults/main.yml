@@ -8,7 +8,11 @@ tomcat_version85: 8.5.32
 tomcat_version9: 9.0.10
 
 # The location where to download Apache Tomcat from.
-tomcat_mirror: http://ftp.nluug.nl/
+tomcat_mirror: https://www.apache.org/dist/
+# Use a local mirror
+tomcat_mirror_use: false
+# How many retries will tried for getting mirror and for downloading tomcat
+tomcat_mirror_retry: 3
 
 # Some "sane" defaults.
 tomcat_name: tomcat

@@ -29,9 +29,25 @@
   loop_control:
     label: "{{ item.directory }}"
 
-- name: download tomcat
+- name: find tomcat mirror
+  uri:
+    url: "{{ tomcat_mirror_picker }}"
+    return_content: yes
+  retries: "{{ tomcat_mirror_retry }}"
+  delay: 5
+  register: mirror_result
+  until: mirror_result is succeeded
+  changed_when: false
+  when: tomcat_mirror_use
+
+- name: set tomcat mirrors
+  set_fact:
+    tomcat_mirror: "{{ (mirror_result.content|from_json)['preferred'] }}"
+  when: tomcat_mirror_use
+
+- name: download tomcat from {{ tomcat_mirror }}
   get_url:
-    url: "{{ tomcat_mirror }}/{{ tomcat_archive[item.version | default (tomcat_version)]['url_path'] }}/{{ tomcat_archive[item.version | default (tomcat_version)]['targz'] }}"
+    url: "{{ tomcat_mirror }}{{ tomcat_archive[item.version | default (tomcat_version)]['url_path'] }}/{{ tomcat_archive[item.version | default (tomcat_version)]['targz'] }}"
     dest: /tmp
   with_items:
     - "{{ tomcat_layout }}"
@@ -39,7 +55,7 @@
     label: "{{ item.version }}"
   register: download_tomcat
   until: download_tomcat is succeeded
-  retries: 3
+  retries: "{{ tomcat_mirror_retry }}"
 
 - name: install tomcat
   unarchive:
