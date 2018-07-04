@@ -1,6 +1,6 @@
 ---
 # where to pick the mirror from
-tomcat_mirror_picker: "https://www.apache.org/dyn/closer.cgi?as_json=1"
+tomcat_mirror_picker: "https://www.apache.org/dyn/closer.cgi/tomcat?as_json=1"
 
 # vars file for tomcat
 tomcat_archive:
