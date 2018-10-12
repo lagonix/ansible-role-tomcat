@@ -19,7 +19,23 @@
     owner: "{{ instance.user | default(tomcat_user) }}"
     group: "{{ instance.group | default(tomcat_group) }}"
 
-- name: install tomcat instance
+- name: find tomcat mirror
+  uri:
+    url: "{{ tomcat_mirror_picker }}"
+    return_content: yes
+  retries: "{{ tomcat_mirror_retry }}"
+  delay: 5
+  register: mirror_result
+  until: mirror_result is succeeded
+  changed_when: false
+  when: tomcat_mirror_use
+
+- name: set tomcat mirrors
+  set_fact:
+    tomcat_mirror: "{{ (mirror_result.content|from_json)['preferred'] }}"
+  when: tomcat_mirror_use
+
+- name: install tomcat instance {{ tomcat mirror }}
   unarchive:
     src: "{{ tomcat_mirror }}/{{ tomcat_archive[instance.version | default (tomcat_version)]['url_path'] }}/{{ tomcat_archive[instance.version | default (tomcat_version)]['targz'] }}"
     dest: "{{ instance.directory | default(tomcat_directory) }}"
@@ -29,7 +45,7 @@
     creates: "{{ instance.directory | default(tomcat_directory) }}/{{ tomcat_archive[instance.version | default (tomcat_version)]['dir'] }}"
   register: install_tomcat
   until: install_tomcat is succeeded
-  retries: 3
+  retries: {{ tomcat_mirror_retry }} 
 
 - name: configure tomcat instance
   template:
