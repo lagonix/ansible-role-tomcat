@@ -8,16 +8,14 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: tomcat-fedora-rawhide
-    image: fedora:rawhide
-    registry:
-      url: registry.fedoraproject.org
+  - name: tomcat-ubuntu-devel
+    image: ubuntu:devel
 provisioner:
   name: ansible
   lint:
     name: ansible-lint
 scenario:
-  name: fedora-rawhide
+  name: ubuntu-devel
 verifier:
   name: goss
   lint:
