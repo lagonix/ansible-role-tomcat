@@ -45,7 +45,7 @@
     creates: "{{ instance.directory | default(tomcat_directory) }}/{{ tomcat_archive[instance.version | default (tomcat_version)]['dir'] }}"
   register: install_tomcat
   until: install_tomcat is succeeded
-  retries: {{ tomcat_mirror_retry }} 
+  retries: "{{ tomcat_mirror_retry }}"
 
 - name: configure tomcat instance
   template:
