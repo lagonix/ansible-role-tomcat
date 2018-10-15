@@ -35,7 +35,7 @@
     tomcat_mirror: "{{ (mirror_result.content|from_json)['preferred'] }}"
   when: tomcat_mirror_use
 
-- name: install tomcat instance {{ tomcat mirror }}
+- name: install tomcat instance "{{ tomcat_mirror }}"
   unarchive:
     src: "{{ tomcat_mirror }}/{{ tomcat_archive[instance.version | default (tomcat_version)]['url_path'] }}/{{ tomcat_archive[instance.version | default (tomcat_version)]['targz'] }}"
     dest: "{{ instance.directory | default(tomcat_directory) }}"
